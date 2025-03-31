@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - KC Store</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a href="index.html">
+                <img src="assets/logo.png" alt="KC Store Logo" class="logo">
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="category.html"><i class="fas fa-list"></i> Danh mục</a></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="checkout-container">
+        <div class="checkout-content">
+            <div class="checkout-steps">
+                <div class="step active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Giỏ hàng</span>
+                </div>
+                <div class="step active">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Thanh toán</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Hoàn tất</span>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <h2><i class="fas fa-clipboard-list"></i> Thông tin đơn hàng</h2>
+                <div id="order-items"></div>
+                <div class="order-total">
+                    <div class="subtotal">
+                        <span>Tạm tính:</span>
+                        <span id="subtotal"></span>
+                    </div>
+                    <div class="shipping">
+                        <span>Phí vận chuyển:</span>
+                        <span id="shipping">30.000₫</span>
+                    </div>
+                    <div class="total">
+                        <span>Tổng cộng:</span>
+                        <span id="total"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-form">
+                <h2><i class="fas fa-user-circle"></i> Thông tin thanh toán</h2>
+                <form id="payment-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">
+                                <i class="fas fa-user"></i> Họ và tên <span class="required">*</span>
+                            </label>
+                            <input type="text" id="fullName" name="fullName" required 
+                                placeholder="Nhập họ và tên"
+                                pattern="^[a-zA-ZÀ-ỹ\s]{2,}$"
+                                title="Họ tên phải có ít nhất 2 ký tự và không chứa số">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">
+                                <i class="fas fa-phone"></i> Số điện thoại <span class="required">*</span>
+                            </label>
+                            <input type="tel" id="phone" name="phone" required 
+                                placeholder="Nhập số điện thoại"
+                                pattern="^(0|84|\+84)([0-9]{9})$"
+                                title="Số điện thoại phải có 10 số và bắt đầu bằng 0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i> Email <span class="required">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" required 
+                            placeholder="Nhập địa chỉ email"
+                            pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                            title="Vui lòng nhập địa chỉ email hợp lệ">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">
+                            <i class="fas fa-map-marker-alt"></i> Địa chỉ <span class="required">*</span>
+                        </label>
+                        <textarea id="address" name="address" required 
+                            placeholder="Nhập địa chỉ giao hàng chi tiết"
+                            rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note">
+                            <i class="fas fa-sticky-note"></i> Ghi chú
+                        </label>
+                        <textarea id="note" name="note" 
+                            placeholder="Nhập ghi chú nếu có (không bắt buộc)"
+                            rows="2"></textarea>
+                    </div>
+
+                    <div class="payment-methods">
+                        <h3><i class="fas fa-money-check"></i> Phương thức thanh toán</h3>
+                        <div class="payment-option">
+                            <input type="radio" id="cod" name="payment" value="cod" checked>
+                            <label for="cod">
+                                <i class="fas fa-money-bill-wave"></i>
+                                Thanh toán khi nhận hàng
+                                <small>Thanh toán bằng tiền mặt khi nhận hàng</small>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="bank" name="payment" value="bank">
+                            <label for="bank">
+                                <i class="fas fa-university"></i>
+                                Chuyển khoản ngân hàng
+                                <small>Chuyển khoản qua tài khoản ngân hàng</small>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="momo" name="payment" value="momo">
+                            <label for="momo">
+                                <i class="fas fa-wallet"></i>
+                                Ví MoMo
+                                <small>Thanh toán qua ví điện tử MoMo</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="cart.html" class="back-to-cart">
+                            <i class="fas fa-arrow-left"></i>
+                            Quay lại giỏ hàng
+                        </a>
+                        <button type="submit" class="checkout-button">
+                            <i class="fas fa-lock"></i>
+                            Đặt hàng
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>KC Store - Địa chỉ tin cậy cho vật tư nông nghiệp</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <p><i class="fas fa-envelope"></i> Email: contact@kcstore.com</p>
+                <p><i class="fas fa-phone"></i> Điện thoại: 0123456789</p>
+                <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 KC Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/checkout.js"></script>
+</body>
+</html> 

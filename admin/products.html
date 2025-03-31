@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sản phẩm - KC Store</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="../assets/logo.png" alt="KC Store Logo" class="logo">
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="../category.html"><i class="fas fa-list"></i> Danh mục</a></li>
+                <li><a href="../cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+                <li><a href="products.html" class="active"><i class="fas fa-user-shield"></i> Quản lý</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h1>Quản lý sản phẩm</h1>
+        
+        <div class="admin-actions">
+            <button id="addProductBtn" class="btn-primary">
+                <i class="fas fa-plus"></i> Thêm sản phẩm mới
+            </button>
+        </div>
+
+        <div class="products-table-container">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- Sản phẩm sẽ được thêm vào đây bằng JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Thêm/Sửa sản phẩm -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Thêm sản phẩm mới</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Tên sản phẩm:</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Danh mục:</label>
+                    <select id="productCategory" name="productCategory" required>
+                        <option value="">Chọn danh mục</option>
+                        <option value="phân-bón">Phân bón</option>
+                        <option value="thuốc-bảo-vệ">Thuốc bảo vệ thực vật</option>
+                        <option value="hạt-giống">Hạt giống</option>
+                        <option value="dụng-cụ">Dụng cụ nông nghiệp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Giá:</label>
+                    <input type="number" id="productPrice" name="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Hình ảnh:</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Mô tả chi tiết:</label>
+                    <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Lưu sản phẩm</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../scripts/admin.js"></script>
+</body>
+</html> 

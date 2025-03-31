@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý đơn hàng - KC Store</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .orders-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .orders-header h1 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin: 0;
+            position: relative;
+        }
+
+        .orders-header h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #4CAF50;
+            margin-top: 10px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .filter-btn .count {
+            background: rgba(0,0,0,0.1);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .order-item {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-info {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .order-number {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .order-date {
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-date i {
+            font-size: 0.9em;
+        }
+
+        .order-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-pending::before { content: '⏳'; }
+        
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-processing::before { content: '⚙️'; }
+        
+        .status-shipping { background: #d4edda; color: #155724; }
+        .status-shipping::before { content: '🚚'; }
+        
+        .status-completed { background: #c3e6cb; color: #155724; }
+        .status-completed::before { content: '✅'; }
+        
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-cancelled::before { content: '❌'; }
+
+        .customer-info {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .customer-info p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .customer-info i {
+            width: 20px;
+            color: #666;
+        }
+
+        .order-products {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .order-product {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .order-product:hover {
+            background-color: #f8f9fa;
+        }
+
+        .product-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .product-quantity {
+            text-align: center;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .product-price, .product-total {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .order-summary {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #ddd;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        .summary-item.total {
+            font-weight: 600;
+            font-size: 1.2em;
+            border-top: 2px dashed #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+            color: #2c3e50;
+        }
+
+        .order-payment {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-payment i {
+            font-size: 1.2em;
+            color: #4CAF50;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .order-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .order-actions button i {
+            font-size: 1.1em;
+        }
+
+        .order-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76,175,80,0.3);
+        }
+
+        .order-actions button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .order-actions button[onclick*="cancelled"] {
+            background: #dc3545;
+        }
+
+        .order-actions button[onclick*="cancelled"]:hover {
+            box-shadow: 0 4px 8px rgba(220,53,69,0.3);
+        }
+
+        .order-actions button[onclick*="printOrder"] {
+            background: #6c757d;
+        }
+
+        .order-actions button[onclick*="printOrder"]:hover {
+            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 60px 40px;
+            background: white;
+            border-radius: 12px;
+            color: #666;
+            font-size: 1.1em;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        }
+
+        .no-orders::before {
+            content: '📦';
+            display: block;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-buttons {
+                justify-content: flex-start;
+            }
+
+            .order-product {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                text-align: center;
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .order-info {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .order-actions {
+                justify-content: stretch;
+            }
+
+            .order-actions button {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">KC Store</a>
+            </div>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="category.html">Sản phẩm</a></li>
+                <li><a href="cart.html">Giỏ hàng</a></li>
+                <li><a href="orders.html" class="active">Đơn hàng</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="orders-container">
+            <div class="orders-header">
+                <h1>Quản lý đơn hàng</h1>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-status="all">
+                        <i class="fas fa-list"></i>
+                        Tất cả <span class="count">0</span>
+                    </button>
+                    <button class="filter-btn" data-status="pending">
+                        <i class="fas fa-clock"></i>
+                        Chờ xử lý <span class="count">0</span>
+                    </button>
+                    <button class="filter-btn" data-status="processing">
+                        <i class="fas fa-cog"></i>
+                        Đang xử lý <span class="count">0</span>
+                    </button>
+                    <button class="filter-btn" data-status="shipping">
+                        <i class="fas fa-truck"></i>
+                        Đang giao <span class="count">0</span>
+                    </button>
+                    <button class="filter-btn" data-status="completed">
+                        <i class="fas fa-check-circle"></i>
+                        Hoàn thành <span class="count">0</span>
+                    </button>
+                    <button class="filter-btn" data-status="cancelled">
+                        <i class="fas fa-times-circle"></i>
+                        Đã hủy <span class="count">0</span>
+                    </button>
+                </div>
+            </div>
+            <div id="orders-list">
+                <!-- Danh sách đơn hàng sẽ được thêm vào đây -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>KC Store - Cung cấp các sản phẩm nông nghiệp chất lượng cao</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <p><i class="fas fa-envelope"></i> contact@kcstore.com</p>
+                <p><i class="fas fa-phone"></i> (084) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 KC Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/orders.js"></script>
+</body>
+</html> 

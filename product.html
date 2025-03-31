@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm - KC Store</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/product.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="assets/logo.png" alt="KC Store Logo" class="logo">
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="category.html"><i class="fas fa-list"></i> Danh mục</a></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="product-detail-container">
+        <div class="product-detail">
+            <div class="product-images">
+                <div class="main-image">
+                    <img id="mainImage" src="" alt="Sản phẩm">
+                </div>
+                <div class="thumbnail-images">
+                    <!-- Thumbnail images will be added here -->
+                </div>
+            </div>
+            <div class="product-info">
+                <h1 id="productName"></h1>
+                <div class="product-price" id="productPrice"></div>
+                <div class="product-category" id="productCategory"></div>
+                <div class="product-description" id="productDescription"></div>
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="quantity" value="1" min="1">
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-details-tabs">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('description')">Mô tả chi tiết</button>
+                <button class="tab-btn" onclick="showTab('specifications')">Thông số kỹ thuật</button>
+                <button class="tab-btn" onclick="showTab('reviews')">Đánh giá</button>
+            </div>
+            <div class="tab-content">
+                <div id="description" class="tab-pane active">
+                    <div id="detailedDescription"></div>
+                </div>
+                <div id="specifications" class="tab-pane">
+                    <div id="productSpecifications"></div>
+                </div>
+                <div id="reviews" class="tab-pane">
+                    <div id="productReviews"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts/product.js"></script>
+</body>
+</html>

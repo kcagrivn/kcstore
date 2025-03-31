@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh mục sản phẩm - KC Store</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/category.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="assets/logo.png" alt="KC Store Logo" class="logo">
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="category.html" class="active"><i class="fas fa-list"></i> Danh mục</a></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="category-container">
+        <div class="category-sidebar">
+            <h2>Danh mục</h2>
+            <ul class="category-list">
+                <li>
+                    <a href="#" class="active" data-category="all">
+                        <i class="fas fa-th-large"></i> Tất cả sản phẩm
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="phân-bón">
+                        <i class="fas fa-seedling"></i> Phân bón
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="thuốc-bảo-vệ">
+                        <i class="fas fa-spray-can"></i> Thuốc bảo vệ thực vật
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="hạt-giống">
+                        <i class="fas fa-wheat"></i> Hạt giống
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="dụng-cụ">
+                        <i class="fas fa-tools"></i> Dụng cụ nông nghiệp
+                    </a>
+                </li>
+            </ul>
+
+            <div class="filter-section">
+                <h3>Lọc theo giá</h3>
+                <div class="price-range">
+                    <input type="range" id="priceRange" min="0" max="10000000" step="100000">
+                    <div class="price-inputs">
+                        <input type="number" id="minPrice" placeholder="Giá tối thiểu">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" placeholder="Giá tối đa">
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Sắp xếp</h3>
+                <select id="sortSelect">
+                    <option value="newest">Mới nhất</option>
+                    <option value="price-asc">Giá tăng dần</option>
+                    <option value="price-desc">Giá giảm dần</option>
+                    <option value="name-asc">Tên A-Z</option>
+                    <option value="name-desc">Tên Z-A</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="category-content">
+            <div class="category-header">
+                <h1 id="categoryTitle">Tất cả sản phẩm</h1>
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be added here -->
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn" onclick="changePage(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="currentPage">1</span>
+                <button class="page-btn" onclick="changePage(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts/category.js"></script>
+</body>
+</html> 
