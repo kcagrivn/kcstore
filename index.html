@@ -1475,9 +1475,9 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">KC Store</div>
-            <div class="menu-toggle">
+            <button class="menu-toggle" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
         </div>
     </header>
 
@@ -1488,15 +1488,15 @@
                 <i class="fas fa-store"></i>
                 KC Store
             </div>
-            <div class="close-menu">
+            <button class="close-menu" aria-label="Close menu">
                 <i class="fas fa-times"></i>
-            </div>
+            </button>
         </div>
         <a href="index.html" class="active">
             <i class="fas fa-home"></i>
             Trang chủ
         </a>
-        <a href="products.html">
+        <a href="category.html">
             <i class="fas fa-th-large"></i>
             Sản phẩm
         </a>
@@ -1514,7 +1514,8 @@
         </a>
     </nav>
 
-    <div class="menu-overlay"></div>
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
 
     <script>
     // Constants
@@ -2055,6 +2056,7 @@
         
         // Open menu
         menuToggle.addEventListener('click', function() {
+            console.log('Menu toggle clicked');
             navLinks.classList.add('active');
             menuOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2062,6 +2064,7 @@
         
         // Close menu
         function closeNav() {
+            console.log('Close menu triggered');
             navLinks.classList.remove('active');
             menuOverlay.classList.remove('active');
             document.body.style.overflow = '';
@@ -2069,6 +2072,18 @@
         
         closeMenu.addEventListener('click', closeNav);
         menuOverlay.addEventListener('click', closeNav);
+        
+        // Thêm event listener cho các liên kết trong menu để đóng menu khi bấm vào
+        const navItems = navLinks.querySelectorAll('a');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                closeNav();
+            });
+        });
+
+        // Kiểm tra trạng thái ban đầu
+        console.log('Initial state - Nav Links visible:', window.getComputedStyle(navLinks).display);
+        console.log('Initial state - Menu Overlay visible:', window.getComputedStyle(menuOverlay).display);
     });
     </script>
   </body>
