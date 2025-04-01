@@ -2,7 +2,7 @@
 @media screen and (max-width: 768px) {
     /* Ẩn sidebar trên mobile */
     .sidebar {
-        display: none;
+        display: none !important;
     }
     
     /* Điều chỉnh content area để không bị margin left */
