@@ -3,109 +3,695 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh mục sản phẩm - KC Store</title>
+    <meta name="description" content="KC Store - Danh mục sản phẩm">
+    <title>Sản phẩm - KC Store</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" as="style">
     <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/category.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --accent-color: #FF5722;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-color: #f8fafb;
+            --border-radius: 12px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --hover-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Layout chính */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            height: 100vh;
+            position: fixed;
+            width: var(--sidebar-width);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .logo a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 15px;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-menu li a:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .nav-menu li a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Content area */
+        .content-area {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            background: #f5f7fa;
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Category Container */
+        .category-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-header {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .filter-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .filter-checkbox:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .filter-checkbox:checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+        }
+
+        .filter-label {
+            color: var(--text-color);
+            font-size: 0.95em;
+        }
+
+        .price-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .price-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-weight: 500;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .product-price {
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .badge-new {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .badge-sale {
+            background: #FF5722;
+            color: white;
+        }
+
+        .badge-out {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Empty state */
+        .empty-products {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-products i {
+            font-size: 4em;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-products p {
+            color: var(--text-color);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        /* Search bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .category-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .filter-sections {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                margin-left: 0;
+                margin-bottom: 70px;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-area {
+                padding: 10px;
+            }
+
+            .filter-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image {
+                height: 180px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <img src="assets/logo.png" alt="KC Store Logo" class="logo">
-        </div>
-        <nav class="navbar">
-            <ul>
-                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
-                <li><a href="category.html" class="active"><i class="fas fa-list"></i> Danh mục</a></li>
-                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="category-container">
-        <div class="category-sidebar">
-            <h2>Danh mục</h2>
-            <ul class="category-list">
-                <li>
-                    <a href="#" class="active" data-category="all">
-                        <i class="fas fa-th-large"></i> Tất cả sản phẩm
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="logo">
+                <a href="index.html" aria-label="KC Store Home">
+                    <i class="fas fa-store"></i>
+                    KC Store
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li role="none">
+                    <a href="index.html" role="menuitem">
+                        <i class="fas fa-home"></i>
+                        Trang chủ
                     </a>
                 </li>
-                <li>
-                    <a href="#" data-category="phân-bón">
-                        <i class="fas fa-seedling"></i> Phân bón
+                <li role="none">
+                    <a href="category.html" class="active" role="menuitem" aria-current="page">
+                        <i class="fas fa-th-large"></i>
+                        Sản phẩm
                     </a>
                 </li>
-                <li>
-                    <a href="#" data-category="thuốc-bảo-vệ">
-                        <i class="fas fa-spray-can"></i> Thuốc bảo vệ thực vật
+                <li role="none">
+                    <a href="cart.html" role="menuitem">
+                        <i class="fas fa-shopping-cart"></i>
+                        Giỏ hàng
                     </a>
                 </li>
-                <li>
-                    <a href="#" data-category="hạt-giống">
-                        <i class="fas fa-wheat"></i> Hạt giống
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-category="dụng-cụ">
-                        <i class="fas fa-tools"></i> Dụng cụ nông nghiệp
+                <li role="none">
+                    <a href="orders.html" role="menuitem">
+                        <i class="fas fa-clipboard-list"></i>
+                        Đơn hàng
                     </a>
                 </li>
             </ul>
+        </aside>
 
-            <div class="filter-section">
-                <h3>Lọc theo giá</h3>
-                <div class="price-range">
-                    <input type="range" id="priceRange" min="0" max="10000000" step="100000">
-                    <div class="price-inputs">
-                        <input type="number" id="minPrice" placeholder="Giá tối thiểu">
-                        <span>-</span>
-                        <input type="number" id="maxPrice" placeholder="Giá tối đa">
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
+                <h1>Danh mục sản phẩm</h1>
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="category-container">
+                <!-- Filters -->
+                <div class="filters">
+                    <div class="filter-sections">
+                        <div class="filter-section">
+                            <div class="filter-header">Danh mục</div>
+                            <div class="filter-group">
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Phân bón (12)</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Hạt giống (8)</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Thuốc bảo vệ (15)</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Dụng cụ (20)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <div class="filter-header">Giá</div>
+                            <div class="filter-group">
+                                <div class="price-range">
+                                    <input type="number" class="price-input" placeholder="Từ">
+                                    <span>-</span>
+                                    <input type="number" class="price-input" placeholder="Đến">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <div class="filter-header">Tình trạng</div>
+                            <div class="filter-group">
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Còn hàng</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Khuyến mãi</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" class="filter-checkbox">
+                                    <span class="filter-label">Hàng mới</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="filter-section">
-                <h3>Sắp xếp</h3>
-                <select id="sortSelect">
-                    <option value="newest">Mới nhất</option>
-                    <option value="price-asc">Giá tăng dần</option>
-                    <option value="price-desc">Giá giảm dần</option>
-                    <option value="name-asc">Tên A-Z</option>
-                    <option value="name-desc">Tên Z-A</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="category-content">
-            <div class="category-header">
-                <h1 id="categoryTitle">Tất cả sản phẩm</h1>
-                <div class="view-options">
-                    <button class="view-btn active" data-view="grid">
-                        <i class="fas fa-th-large"></i>
-                    </button>
-                    <button class="view-btn" data-view="list">
-                        <i class="fas fa-list"></i>
-                    </button>
+                <!-- Products Grid -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be added here by JavaScript -->
                 </div>
             </div>
-
-            <div class="products-grid" id="productsGrid">
-                <!-- Products will be added here -->
-            </div>
-
-            <div class="pagination">
-                <button class="page-btn" onclick="changePage(-1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <span id="currentPage">1</span>
-                <button class="page-btn" onclick="changePage(1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
         </div>
-    </main>
+    </div>
 
-    <script src="scripts/category.js"></script>
+    <script>
+        // Sample products data
+        const products = [
+            {
+                id: 1,
+                name: 'Phân bón NPK',
+                price: 250000,
+                image: 'assets/images/product1.jpg',
+                category: 'Phân bón',
+                isNew: true,
+                inStock: true
+            },
+            {
+                id: 2,
+                name: 'Hạt giống cà chua',
+                price: 35000,
+                image: 'assets/images/product2.jpg',
+                category: 'Hạt giống',
+                isNew: false,
+                inStock: true,
+                onSale: true
+            },
+            {
+                id: 3,
+                name: 'Thuốc trừ sâu sinh học',
+                price: 180000,
+                image: 'assets/images/product3.jpg',
+                category: 'Thuốc bảo vệ',
+                isNew: false,
+                inStock: false
+            }
+        ];
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const productsGrid = document.getElementById('productsGrid');
+            
+            if (!products || products.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="empty-products">
+                        <i class="fas fa-box-open"></i>
+                        <p>Không tìm thấy sản phẩm nào</p>
+                    </div>
+                `;
+                return;
+            }
+
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    ${getBadge(product)}
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-details">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${formatPrice(product.price)}</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                                <i class="fas fa-cart-plus"></i>
+                                Thêm vào giỏ
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewProduct(${product.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get badge for product
+        function getBadge(product) {
+            if (!product.inStock) {
+                return '<span class="product-badge badge-out">Hết hàng</span>';
+            }
+            if (product.isNew) {
+                return '<span class="product-badge badge-new">Mới</span>';
+            }
+            if (product.onSale) {
+                return '<span class="product-badge badge-sale">Giảm giá</span>';
+            }
+            return '';
+        }
+
+        // Search products
+        function searchProducts(query) {
+            query = query.toLowerCase().trim();
+            if (!query) {
+                displayProducts(products);
+                return;
+            }
+
+            const filtered = products.filter(product => 
+                product.name.toLowerCase().includes(query) ||
+                product.category.toLowerCase().includes(query)
+            );
+            displayProducts(filtered);
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            // TODO: Implement add to cart functionality
+            console.log('Adding product to cart:', productId);
+        }
+
+        // View product
+        function viewProduct(productId) {
+            // TODO: Implement view product functionality
+            console.log('Viewing product:', productId);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts(products);
+
+            // Add search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                searchProducts(e.target.value);
+            });
+        });
+    </script>
 </body>
 </html> 

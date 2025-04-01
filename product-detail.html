@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm - KC Store</title>
+    <link rel="stylesheet" href="css-home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .product-detail-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .product-gallery {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .product-main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            transition: transform 0.3s ease;
+        }
+
+        .product-main-image:hover {
+            transform: scale(1.05);
+        }
+
+        .product-info-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .product-title {
+            font-size: 1.8em;
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-light);
+            font-size: 0.95em;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-price-detail {
+            font-size: 2em;
+            color: var(--accent-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stock-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .stock-status.in-stock {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .stock-status.low-stock {
+            background: #fff3e0;
+            color: var(--accent-color);
+        }
+
+        .stock-status.out-stock {
+            background: #ffebee;
+            color: #dc3545;
+        }
+
+        .product-description {
+            color: var(--text-color);
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+
+        .product-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .spec-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: var(--text-light);
+        }
+
+        .spec-item i {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .quantity-selector label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 36px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1em;
+            color: var(--text-color);
+        }
+
+        .add-to-cart-detail {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-add-to-cart {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-add-to-cart:disabled {
+            background: #f8f9fa;
+            color: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-add-to-cart i {
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .product-main-image {
+                height: 300px;
+            }
+
+            .product-title {
+                font-size: 1.5em;
+            }
+
+            .product-price-detail {
+                font-size: 1.6em;
+            }
+
+            .product-specs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-leaf"></i>
+                    KC Store
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i>Trang chủ</a></li>
+                <li><a href="#"><i class="fas fa-th-large"></i>Danh mục</a></li>
+                <li><a href="#"><i class="fas fa-shopping-cart"></i>Giỏ hàng</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-cog"></i>Quản lý</a></li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="product-detail-container">
+                <div class="product-detail-grid">
+                    <div class="product-gallery">
+                        <img src="" alt="" class="product-main-image" id="productImage">
+                    </div>
+                    <div class="product-info-detail">
+                        <h1 class="product-title" id="productName"></h1>
+                        <div class="product-meta">
+                            <span><i class="fas fa-tags"></i><span id="productCategory"></span></span>
+                            <span><i class="fas fa-box"></i><span id="productUnit"></span></span>
+                            <span><i class="fas fa-industry"></i><span id="productManufacturer"></span></span>
+                        </div>
+                        <div class="product-price-detail">
+                            <span id="productPrice"></span>
+                            <div class="stock-status" id="stockStatus"></div>
+                        </div>
+                        <p class="product-description" id="productDescription"></p>
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Ngày thêm: <span id="productDate"></span></span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Hạn sử dụng: <span id="productExpiry"></span></span>
+                            </div>
+                        </div>
+                        <div class="quantity-selector">
+                            <label>Số lượng:</label>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="decreaseQuantity()">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="quantity-input" id="quantity" value="1" min="1">
+                                <button class="quantity-btn" onclick="increaseQuantity()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="add-to-cart-detail">
+                            <button class="btn-add-to-cart" onclick="addToCart()" id="addToCartBtn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('vi-VN', options);
+        }
+
+        // Get product ID from URL
+        function getProductId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Get status info
+        function getStatusInfo(stock) {
+            if (stock > 10) {
+                return {
+                    class: 'in-stock',
+                    text: 'Còn hàng',
+                    icon: 'fa-check-circle'
+                };
+            } else if (stock > 0) {
+                return {
+                    class: 'low-stock',
+                    text: 'Sắp hết',
+                    icon: 'fa-exclamation-circle'
+                };
+            } else {
+                return {
+                    class: 'out-stock',
+                    text: 'Hết hàng',
+                    icon: 'fa-times-circle'
+                };
+            }
+        }
+
+        // Load product details
+        function loadProductDetails() {
+            const productId = getProductId();
+            if (!productId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.id === parseInt(productId));
+
+            if (!product) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Update DOM
+            document.getElementById('productImage').src = product.image;
+            document.getElementById('productImage').alt = product.name;
+            document.getElementById('productName').textContent = product.name;
+            document.getElementById('productCategory').textContent = product.category || 'Chưa phân loại';
+            document.getElementById('productUnit').textContent = product.unit || 'Đơn vị';
+            document.getElementById('productManufacturer').textContent = product.manufacturer || 'Nhà sản xuất';
+            document.getElementById('productPrice').textContent = formatPrice(product.price);
+            document.getElementById('productDescription').textContent = product.description || 'Chưa có mô tả';
+            document.getElementById('productDate').textContent = formatDate(product.dateAdded || new Date());
+            document.getElementById('productExpiry').textContent = product.expiryDate || 'Không có';
+
+            // Update stock status
+            const status = getStatusInfo(product.stock);
+            const stockStatus = document.getElementById('stockStatus');
+            stockStatus.className = `stock-status ${status.class}`;
+            stockStatus.innerHTML = `<i class="fas ${status.icon}"></i> ${status.text}`;
+
+            // Update add to cart button
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            if (product.stock === 0) {
+                addToCartBtn.disabled = true;
+                document.getElementById('quantity').max = 0;
+            } else {
+                addToCartBtn.disabled = false;
+                document.getElementById('quantity').max = product.stock;
+            }
+        }
+
+        // Quantity controls
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            const value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            const value = parseInt(input.value);
+            const max = parseInt(input.max);
+            if (value < max) {
+                input.value = value + 1;
+            }
+        }
+
+        // Add to cart
+        function addToCart() {
+            const productId = getProductId();
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.id === parseInt(productId));
+
+            if (!product || quantity > product.stock) {
+                alert('Số lượng không hợp lệ hoặc sản phẩm không tồn tại!');
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === product.id);
+
+            if (existingItem) {
+                if (existingItem.quantity + quantity <= product.stock) {
+                    existingItem.quantity += quantity;
+                } else {
+                    alert('Số lượng vượt quá tồn kho!');
+                    return;
+                }
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: quantity
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Đã thêm sản phẩm vào giỏ hàng!');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadProductDetails);
+    </script>
+</body>
+</html> 

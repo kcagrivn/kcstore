@@ -3,447 +3,695 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KC Store - Quản lý đơn hàng">
     <title>Quản lý đơn hàng - KC Store</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" as="style">
     <link rel="stylesheet" href="styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --accent-color: #FF5722;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-color: #f8fafb;
+            --border-radius: 12px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --hover-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            --sidebar-width: 280px;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Layout chính */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            height: 100vh;
+            position: fixed;
+            width: var(--sidebar-width);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .logo a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 15px;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-menu li a:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .nav-menu li a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Content area */
+        .content-area {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            background: #f5f7fa;
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Orders Container */
         .orders-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
         }
 
         .orders-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .orders-header h1 {
-            font-size: 2em;
-            color: #2c3e50;
-            margin: 0;
-            position: relative;
-        }
-
-        .orders-header h1::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 3px;
-            background: #4CAF50;
-            margin-top: 10px;
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            color: #555;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .filter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .filter-btn.active {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .filter-btn .count {
-            background: rgba(0,0,0,0.1);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            min-width: 24px;
-            text-align: center;
-        }
-
-        .order-item {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .order-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-info {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .order-number {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 1.1em;
-        }
-
-        .order-date {
-            color: #666;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .order-date i {
-            font-size: 0.9em;
-        }
-
-        .order-status {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.9em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-pending::before { content: '⏳'; }
-        
-        .status-processing { background: #cce5ff; color: #004085; }
-        .status-processing::before { content: '⚙️'; }
-        
-        .status-shipping { background: #d4edda; color: #155724; }
-        .status-shipping::before { content: '🚚'; }
-        
-        .status-completed { background: #c3e6cb; color: #155724; }
-        .status-completed::before { content: '✅'; }
-        
-        .status-cancelled { background: #f8d7da; color: #721c24; }
-        .status-cancelled::before { content: '❌'; }
-
-        .customer-info {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-        }
-
-        .customer-info p {
-            margin: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .customer-info i {
-            width: 20px;
-            color: #666;
-        }
-
-        .order-products {
-            margin-bottom: 20px;
             background: white;
-            border-radius: 8px;
-            overflow: hidden;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
         }
 
-        .order-product {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 15px;
-            padding: 15px;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
-
-        .order-product:hover {
-            background-color: #f8f9fa;
-        }
-
-        .product-name {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .product-quantity {
-            text-align: center;
-            background: #e9ecef;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .product-price, .product-total {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .order-summary {
-            margin: 20px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px dashed #ddd;
-        }
-
-        .summary-item {
+        .orders-filters {
             display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-            font-size: 1.1em;
+            gap: 15px;
+            align-items: center;
         }
 
-        .summary-item.total {
-            font-weight: 600;
-            font-size: 1.2em;
-            border-top: 2px dashed #ddd;
-            padding-top: 15px;
-            margin-top: 15px;
-            color: #2c3e50;
-        }
-
-        .order-payment {
-            margin: 20px 0;
-            padding: 15px;
-            background: #fff;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+        .filter-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .order-payment i {
-            font-size: 1.2em;
-            color: #4CAF50;
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            color: var(--text-color);
+            font-size: 0.95em;
+        }
+
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .order-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.02);
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .order-date {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-content {
+            padding: 20px;
+        }
+
+        .order-items {
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .item-price {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .item-quantity {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        .order-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.02);
+        }
+
+        .order-total {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 1.1em;
         }
 
         .order-actions {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            gap: 10px;
         }
 
-        .order-actions button {
-            padding: 10px 20px;
+        .btn {
+            padding: 8px 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            background: #4CAF50;
-            color: white;
             font-weight: 500;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
+            font-size: 0.9em;
         }
 
-        .order-actions button i {
-            font-size: 1.1em;
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
         }
 
-        .order-actions button:hover {
+        .btn-primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(76,175,80,0.3);
         }
 
-        .order-actions button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
-        .order-actions button[onclick*="cancelled"] {
-            background: #dc3545;
+        .btn-secondary:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
-        .order-actions button[onclick*="cancelled"]:hover {
-            box-shadow: 0 4px 8px rgba(220,53,69,0.3);
-        }
-
-        .order-actions button[onclick*="printOrder"] {
-            background: #6c757d;
-        }
-
-        .order-actions button[onclick*="printOrder"]:hover {
-            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
-        }
-
-        .no-orders {
-            text-align: center;
-            padding: 60px 40px;
-            background: white;
-            border-radius: 12px;
-            color: #666;
-            font-size: 1.1em;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-        }
-
-        .no-orders::before {
-            content: '📦';
-            display: block;
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
+            .content-area {
+                margin-left: 0;
+                margin-bottom: 70px;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
             .orders-header {
                 flex-direction: column;
-                align-items: stretch;
+                gap: 15px;
             }
 
-            .filter-buttons {
-                justify-content: flex-start;
-            }
-
-            .order-product {
-                grid-template-columns: 1fr;
-                gap: 8px;
-                text-align: center;
-                padding: 15px;
-                border-bottom: 1px solid #eee;
+            .orders-filters {
+                flex-wrap: wrap;
             }
 
             .order-header {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+                gap: 10px;
+                text-align: center;
             }
 
-            .order-info {
+            .order-footer {
                 flex-direction: column;
-                gap: 10px;
-                width: 100%;
+                gap: 15px;
+                text-align: center;
             }
 
             .order-actions {
-                justify-content: stretch;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-area {
+                padding: 10px;
             }
 
-            .order-actions button {
-                flex: 1;
+            .page-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
                 justify-content: center;
+            }
+
+            .order-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .item-image {
+                width: 80px;
+                height: 80px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" role="navigation" aria-label="Main navigation">
             <div class="logo">
-                <a href="index.html">KC Store</a>
+                <a href="index.html" aria-label="KC Store Home">
+                    <i class="fas fa-store"></i>
+                    KC Store
+                </a>
             </div>
-            <ul>
-                <li><a href="index.html">Trang chủ</a></li>
-                <li><a href="category.html">Sản phẩm</a></li>
-                <li><a href="cart.html">Giỏ hàng</a></li>
-                <li><a href="orders.html" class="active">Đơn hàng</a></li>
+            <ul class="nav-menu" role="menubar">
+                <li role="none">
+                    <a href="index.html" role="menuitem">
+                        <i class="fas fa-home"></i>
+                        Trang chủ
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="category.html" role="menuitem">
+                        <i class="fas fa-th-large"></i>
+                        Sản phẩm
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="cart.html" role="menuitem">
+                        <i class="fas fa-shopping-cart"></i>
+                        Giỏ hàng
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="orders.html" class="active" role="menuitem" aria-current="page">
+                        <i class="fas fa-clipboard-list"></i>
+                        Đơn hàng
+                    </a>
+                </li>
             </ul>
-        </nav>
-    </header>
+        </aside>
 
-    <main>
-        <div class="orders-container">
-            <div class="orders-header">
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
                 <h1>Quản lý đơn hàng</h1>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-status="all">
-                        <i class="fas fa-list"></i>
-                        Tất cả <span class="count">0</span>
+                <div class="page-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Tạo đơn hàng
                     </button>
-                    <button class="filter-btn" data-status="pending">
-                        <i class="fas fa-clock"></i>
-                        Chờ xử lý <span class="count">0</span>
-                    </button>
-                    <button class="filter-btn" data-status="processing">
-                        <i class="fas fa-cog"></i>
-                        Đang xử lý <span class="count">0</span>
-                    </button>
-                    <button class="filter-btn" data-status="shipping">
-                        <i class="fas fa-truck"></i>
-                        Đang giao <span class="count">0</span>
-                    </button>
-                    <button class="filter-btn" data-status="completed">
-                        <i class="fas fa-check-circle"></i>
-                        Hoàn thành <span class="count">0</span>
-                    </button>
-                    <button class="filter-btn" data-status="cancelled">
-                        <i class="fas fa-times-circle"></i>
-                        Đã hủy <span class="count">0</span>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Xuất Excel
                     </button>
                 </div>
             </div>
-            <div id="orders-list">
-                <!-- Danh sách đơn hàng sẽ được thêm vào đây -->
-            </div>
-        </div>
-    </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Về chúng tôi</h3>
-                <p>KC Store - Cung cấp các sản phẩm nông nghiệp chất lượng cao</p>
-            </div>
-            <div class="footer-section">
-                <h3>Liên hệ</h3>
-                <p><i class="fas fa-envelope"></i> contact@kcstore.com</p>
-                <p><i class="fas fa-phone"></i> (084) 123-4567</p>
-            </div>
-            <div class="footer-section">
-                <h3>Theo dõi</h3>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+            <div class="orders-container">
+                <div class="orders-header">
+                    <div class="orders-filters">
+                        <div class="filter-group">
+                            <label for="status-filter">Trạng thái:</label>
+                            <select id="status-filter" class="filter-select">
+                                <option value="all">Tất cả</option>
+                                <option value="pending">Chờ xử lý</option>
+                                <option value="processing">Đang xử lý</option>
+                                <option value="completed">Hoàn thành</option>
+                                <option value="cancelled">Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="date-filter">Thời gian:</label>
+                            <select id="date-filter" class="filter-select">
+                                <option value="all">Tất cả</option>
+                                <option value="today">Hôm nay</option>
+                                <option value="week">Tuần này</option>
+                                <option value="month">Tháng này</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="orders-grid" id="orders-grid">
+                    <!-- Order cards will be added here by JavaScript -->
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 KC Store. All rights reserved.</p>
-        </div>
-    </footer>
+    </div>
 
-    <script src="scripts/orders.js"></script>
+    <script>
+        // Constants
+        const STORAGE_KEYS = {
+            ORDERS: 'orders'
+        };
+
+        // Sample orders data
+        const sampleOrders = [
+            {
+                id: 'DH001',
+                date: '2024-01-04',
+                status: 'pending',
+                items: [
+                    {
+                        name: 'Phân bón NPK',
+                        price: 250000,
+                        quantity: 2,
+                        image: 'assets/images/product1.jpg'
+                    },
+                    {
+                        name: 'Hạt giống cà chua',
+                        price: 35000,
+                        quantity: 3,
+                        image: 'assets/images/product2.jpg'
+                    }
+                ],
+                total: 605000
+            },
+            {
+                id: 'DH002',
+                date: '2024-01-03',
+                status: 'completed',
+                items: [
+                    {
+                        name: 'Thuốc trừ sâu sinh học',
+                        price: 180000,
+                        quantity: 1,
+                        image: 'assets/images/product3.jpg'
+                    }
+                ],
+                total: 180000
+            }
+        ];
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('vi-VN', options);
+        }
+
+        // Get status class
+        function getStatusClass(status) {
+            switch(status) {
+                case 'pending': return 'status-pending';
+                case 'processing': return 'status-processing';
+                case 'completed': return 'status-completed';
+                case 'cancelled': return 'status-cancelled';
+                default: return '';
+            }
+        }
+
+        // Get status text
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'Chờ xử lý';
+                case 'processing': return 'Đang xử lý';
+                case 'completed': return 'Hoàn thành';
+                case 'cancelled': return 'Đã hủy';
+                default: return status;
+            }
+        }
+
+        // Display orders
+        function displayOrders(orders = sampleOrders) {
+            const ordersGrid = document.getElementById('orders-grid');
+            
+            if (!orders || orders.length === 0) {
+                ordersGrid.innerHTML = `
+                    <div class="empty-orders">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Chưa có đơn hàng nào.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ordersGrid.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">Đơn hàng #${order.id}</div>
+                        <div class="order-date">${formatDate(order.date)}</div>
+                        <span class="order-status ${getStatusClass(order.status)}">
+                            ${getStatusText(order.status)}
+                        </span>
+                    </div>
+                    <div class="order-content">
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <img src="${item.image}" alt="${item.name}" class="item-image">
+                                    <div class="item-details">
+                                        <div class="item-name">${item.name}</div>
+                                        <div class="item-price">${formatPrice(item.price)}</div>
+                                        <div class="item-quantity">Số lượng: ${item.quantity}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            Tổng tiền: ${formatPrice(order.total)}
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-eye"></i>
+                                Chi tiết
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-print"></i>
+                                In đơn
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter orders
+        function filterOrders() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+            
+            let filteredOrders = [...sampleOrders];
+
+            if (statusFilter !== 'all') {
+                filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
+            }
+
+            if (dateFilter !== 'all') {
+                const today = new Date();
+                const orderDate = new Date();
+                
+                switch(dateFilter) {
+                    case 'today':
+                        filteredOrders = filteredOrders.filter(order => 
+                            new Date(order.date).toDateString() === today.toDateString()
+                        );
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(today.setDate(today.getDate() - 7));
+                        filteredOrders = filteredOrders.filter(order => 
+                            new Date(order.date) >= weekAgo
+                        );
+                        break;
+                    case 'month':
+                        const monthAgo = new Date(today.setMonth(today.getMonth() - 1));
+                        filteredOrders = filteredOrders.filter(order => 
+                            new Date(order.date) >= monthAgo
+                        );
+                        break;
+                }
+            }
+
+            displayOrders(filteredOrders);
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            displayOrders();
+
+            // Add filter event listeners
+            document.getElementById('status-filter').addEventListener('change', filterOrders);
+            document.getElementById('date-filter').addEventListener('change', filterOrders);
+        });
+    </script>
 </body>
 </html> 
